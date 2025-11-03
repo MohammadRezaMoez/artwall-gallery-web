@@ -4,43 +4,57 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ProductCard from "@/components/ProductCard";
 import heroImage from "@/assets/hero-image.jpg";
-import product1 from "@/assets/product-1.jpg";
-import product2 from "@/assets/product-2.jpg";
-import product3 from "@/assets/product-3.jpg";
-import product4 from "@/assets/product-4.jpg";
 import { Sparkles, Heart, Palette } from "lucide-react";
+import { useState, useEffect } from "react";
+import { supabase } from "@/integrations/supabase/client";
+
+interface Product {
+  id: string;
+  title: string;
+  image_url: string;
+  price: string;
+  description: string;
+}
+
+interface Testimonial {
+  id: string;
+  name: string;
+  text: string;
+}
 
 const Index = () => {
-  const featuredProducts = [
-    {
-      id: 1,
-      title: "آرامش انتزاعی",
-      image: product1,
-      price: "۱,۲۵۰,۰۰۰",
-      description: "طرح هندسی با رنگ‌های گرم",
-    },
-    {
-      id: 2,
-      title: "باغ خشک",
-      image: product2,
-      price: "۹۵۰,۰۰۰",
-      description: "گل‌های خشک طبیعی",
-    },
-    {
-      id: 3,
-      title: "چهره مینیمال",
-      image: product3,
-      price: "۸۵۰,۰۰۰",
-      description: "طراحی خطی ساده",
-    },
-    {
-      id: 4,
-      title: "غروب کوهستان",
-      image: product4,
-      price: "۱,۱۰۰,۰۰۰",
-      description: "آبرنگ انتزاعی منظره",
-    },
-  ];
+  const [featuredProducts, setFeaturedProducts] = useState<Product[]>([]);
+  const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
+
+  useEffect(() => {
+    fetchFeaturedProducts();
+    fetchTestimonials();
+  }, []);
+
+  const fetchFeaturedProducts = async () => {
+    const { data, error } = await supabase
+      .from("products")
+      .select("*")
+      .order("created_at", { ascending: false })
+      .limit(4);
+    
+    if (!error && data) {
+      setFeaturedProducts(data);
+    }
+  };
+
+  const fetchTestimonials = async () => {
+    const { data, error } = await supabase
+      .from("testimonials")
+      .select("*")
+      .eq("is_approved", true)
+      .order("created_at", { ascending: false })
+      .limit(3);
+    
+    if (!error && data) {
+      setTestimonials(data);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -85,7 +99,7 @@ const Index = () => {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
             {featuredProducts.map((product) => (
-              <ProductCard key={product.id} {...product} />
+              <ProductCard key={product.id} {...product} image={product.image_url} />
             ))}
           </div>
           <div className="text-center mt-12">
@@ -161,30 +175,23 @@ const Index = () => {
             <p className="text-muted-foreground text-lg">تجربه‌های واقعی از مشتریان ما</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {[
-              {
-                name: "سارا احمدی",
-                text: "کیفیت تابلو فوق‌العاده بود. دقیقاً همان چیزی که می‌خواستم!",
-              },
-              {
-                name: "علی محمدی",
-                text: "خدمات عالی و تحویل سریع. حتماً دوباره سفارش می‌دهم.",
-              },
-              {
-                name: "مریم کریمی",
-                text: "تابلوی سفارشی من بسیار زیبا شد. از تیم ARTWALL تشکر می‌کنم!",
-              },
-            ].map((testimonial, index) => (
-              <div
-                key={index}
-                className="bg-card p-8 rounded-xl shadow-soft border border-border"
-              >
-                <p className="text-muted-foreground mb-4 leading-relaxed italic">
-                  "{testimonial.text}"
-                </p>
-                <p className="text-primary font-medium">— {testimonial.name}</p>
+            {testimonials.length > 0 ? (
+              testimonials.map((testimonial) => (
+                <div
+                  key={testimonial.id}
+                  className="bg-card p-8 rounded-xl shadow-soft border border-border"
+                >
+                  <p className="text-muted-foreground mb-4 leading-relaxed italic">
+                    "{testimonial.text}"
+                  </p>
+                  <p className="text-primary font-medium">— {testimonial.name}</p>
+                </div>
+              ))
+            ) : (
+              <div className="col-span-3 text-center py-8">
+                <p className="text-muted-foreground">در حال بارگذاری نظرات...</p>
               </div>
-            ))}
+            )}
           </div>
         </div>
       </section>

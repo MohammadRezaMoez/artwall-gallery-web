@@ -2,65 +2,39 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ProductCard from "@/components/ProductCard";
 import { Button } from "@/components/ui/button";
-import product1 from "@/assets/product-1.jpg";
-import product2 from "@/assets/product-2.jpg";
-import product3 from "@/assets/product-3.jpg";
-import product4 from "@/assets/product-4.jpg";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { supabase } from "@/integrations/supabase/client";
+
+interface Product {
+  id: string;
+  title: string;
+  image_url: string;
+  price: string;
+  description: string;
+  category: string;
+}
 
 const Products = () => {
   const [activeFilter, setActiveFilter] = useState("all");
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const products = [
-    {
-      id: 1,
-      title: "آرامش انتزاعی",
-      image: product1,
-      price: "۱,۲۵۰,۰۰۰",
-      description: "طرح هندسی با رنگ‌های گرم",
-      category: "minimal",
-    },
-    {
-      id: 2,
-      title: "باغ خشک",
-      image: product2,
-      price: "۹۵۰,۰۰۰",
-      description: "گل‌های خشک طبیعی",
-      category: "natural",
-    },
-    {
-      id: 3,
-      title: "چهره مینیمال",
-      image: product3,
-      price: "۸۵۰,۰۰۰",
-      description: "طراحی خطی ساده",
-      category: "minimal",
-    },
-    {
-      id: 4,
-      title: "غروب کوهستان",
-      image: product4,
-      price: "۱,۱۰۰,۰۰۰",
-      description: "آبرنگ انتزاعی منظره",
-      category: "modern",
-    },
-    {
-      id: 5,
-      title: "هارمونی طلایی",
-      image: product1,
-      price: "۱,۳۵۰,۰۰۰",
-      description: "ترکیب طلایی و قهوه‌ای",
-      category: "modern",
-    },
-    {
-      id: 6,
-      title: "برگ‌های خزان",
-      image: product2,
-      price: "۱,۰۰۰,۰۰۰",
-      description: "مجموعه برگ‌های پاییزی",
-      category: "natural",
-    },
-  ];
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+
+  const fetchProducts = async () => {
+    setLoading(true);
+    const { data, error } = await supabase
+      .from("products")
+      .select("*")
+      .order("created_at", { ascending: false });
+    
+    if (!error && data) {
+      setProducts(data);
+    }
+    setLoading(false);
+  };
 
   const filters = [
     { id: "all", label: "همه" },
@@ -111,11 +85,21 @@ const Products = () => {
       {/* Products Grid */}
       <section className="py-16">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-            {filteredProducts.map((product) => (
-              <ProductCard key={product.id} {...product} />
-            ))}
-          </div>
+          {loading ? (
+            <div className="text-center py-20">
+              <p className="text-muted-foreground">در حال بارگذاری...</p>
+            </div>
+          ) : filteredProducts.length === 0 ? (
+            <div className="text-center py-20">
+              <p className="text-muted-foreground">محصولی یافت نشد</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+              {filteredProducts.map((product) => (
+                <ProductCard key={product.id} {...product} image={product.image_url} />
+              ))}
+            </div>
+          )}
         </div>
       </section>
 

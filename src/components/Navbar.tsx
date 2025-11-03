@@ -1,11 +1,22 @@
-import { Link, useLocation } from "react-router-dom";
-import { Button } from "@/components/ui/button";
+import { useState } from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { Menu, X, LogOut, User, Shield } from "lucide-react";
+import { Button } from "./ui/button";
+import { useAuth } from "@/hooks/useAuth";
 
 const Navbar = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  const { user, isAdmin, signOut } = useAuth();
+  const navigate = useNavigate();
   const location = useLocation();
-  
+
   const isActive = (path: string) => location.pathname === path;
-  
+
+  const handleSignOut = async () => {
+    await signOut();
+    navigate("/");
+  };
+
   return (
     <nav className="sticky top-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -57,10 +68,55 @@ const Navbar = () => {
                 تماس با ما
               </Button>
             </Link>
+
+            {user ? (
+              <div className="flex items-center gap-3">
+                {isAdmin && (
+                  <Link to="/admin">
+                    <Button variant="outline" size="sm">
+                      <Shield className="w-4 h-4 ml-2" />
+                      پنل مدیریت
+                    </Button>
+                  </Link>
+                )}
+                <Button variant="outline" size="sm" onClick={handleSignOut}>
+                  <LogOut className="w-4 h-4 ml-2" />
+                  خروج
+                </Button>
+              </div>
+            ) : (
+              <Link to="/auth">
+                <Button size="sm">
+                  <User className="w-4 h-4 ml-2" />
+                  ورود
+                </Button>
+              </Link>
+            )}
           </div>
 
           {/* Mobile Navigation */}
           <div className="md:hidden flex items-center gap-2">
+            {user ? (
+              <>
+                {isAdmin && (
+                  <Link to="/admin">
+                    <Button variant="ghost" size="sm">
+                      <Shield className="w-4 h-4" />
+                    </Button>
+                  </Link>
+                )}
+                <Button variant="ghost" size="sm" onClick={handleSignOut}>
+                  <LogOut className="w-4 h-4" />
+                </Button>
+              </>
+            ) : (
+              <Link to="/auth">
+                <Button size="sm" className="text-sm">
+                  <User className="w-4 h-4 ml-1" />
+                  ورود
+                </Button>
+              </Link>
+            )}
             <Link to="/products">
               <Button variant="ghost" size="sm" className="text-sm">
                 محصولات
