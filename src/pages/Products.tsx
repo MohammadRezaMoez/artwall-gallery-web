@@ -59,7 +59,7 @@ const Products = () => {
             مجموعه تابلوها
           </h1>
           <p className="text-muted-foreground text-lg max-w-2xl mx-auto leading-relaxed">
-            از میان بیش از ۵۰ طرح منحصربه‌فرد، تابلوی دلخواه خود را انتخاب کنید
+            از میان طرح های منحصر به فرد ، تابلوی دلخواه خود را انتخاب کنید
           </p>
         </div>
       </section>
