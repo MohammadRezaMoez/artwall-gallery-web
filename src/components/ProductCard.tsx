@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import { Link } from "react-router-dom";
 
 interface ProductCardProps {
   id?: string | number;
@@ -10,7 +11,7 @@ interface ProductCardProps {
   description?: string;
 }
 
-const ProductCard = ({ title, image, image_url, price, description }: ProductCardProps) => {
+const ProductCard = ({ id, title, image, image_url, price, description }: ProductCardProps) => {
   const imageSource = image || image_url;
   
   return (
@@ -38,8 +39,8 @@ const ProductCard = ({ title, image, image_url, price, description }: ProductCar
           )}
           <p className="text-xl font-semibold text-accent">{price} تومان</p>
         </div>
-        <Button className="w-full" variant="default">
-          مشاهده جزئیات
+        <Button className="w-full" variant="default" asChild>
+          <Link to={`/products/${id}`}>مشاهده جزئیات</Link>
         </Button>
       </CardFooter>
     </Card>
