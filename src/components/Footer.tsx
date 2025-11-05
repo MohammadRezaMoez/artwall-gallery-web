@@ -45,15 +45,15 @@ const Footer = () => {
             <h4 className="text-lg font-medium text-foreground">ارتباط با ما</h4>
             <div className="flex flex-col items-center md:items-start gap-3">
               <a
-                href="tel:+989123456789"
+                href="tel:+989360701498"
                 className="flex items-center gap-2 text-muted-foreground hover:text-accent transition-colors text-sm"
               >
                 <Phone className="w-4 h-4" />
-                <span>۰۹۱۲-۳۴۵-۶۷۸۹</span>
+                <span>۰۹۳۶۰۷۰۱۴۹۸</span>
               </a>
               <div className="flex items-center gap-4 mt-2">
                 <a
-                  href="https://instagram.com/artwall"
+                  href="https://www.instagram.com/artwall_home/"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-muted-foreground hover:text-accent transition-colors"
@@ -62,7 +62,7 @@ const Footer = () => {
                   <Instagram className="w-5 h-5" />
                 </a>
                 <a
-                  href="https://wa.me/989123456789"
+                  href="https://wa.me/989360701498"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-muted-foreground hover:text-accent transition-colors"

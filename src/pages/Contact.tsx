@@ -114,7 +114,7 @@ const Contact = () => {
                         شماره تماس
                       </h3>
                       <p className="text-muted-foreground" dir="ltr">
-                        ۰۹۱۲-۳۴۵-۶۷۸۹
+                        ۰۹۳۶۰۷۰۱۴۹۸
                       </p>
                     </div>
                   </div>
@@ -127,7 +127,7 @@ const Contact = () => {
                         ایمیل
                       </h3>
                       <p className="text-muted-foreground">
-                        info@artwall.com
+                        mmreza696@gmail.com
                       </p>
                     </div>
                   </div>
@@ -140,7 +140,7 @@ const Contact = () => {
                         آدرس
                       </h3>
                       <p className="text-muted-foreground leading-relaxed">
-                        تهران، میدان ونک، خیابان ملاصدرا، پلاک ۱۲۳
+                        همدان
                       </p>
                     </div>
                   </div>
@@ -153,7 +153,7 @@ const Contact = () => {
                 </h3>
                 <div className="flex gap-4">
                   <a
-                    href="https://instagram.com/artwall"
+                    href="https://www.instagram.com/artwall_home/"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="bg-accent/10 p-4 rounded-full hover:bg-accent/20 transition-colors"
@@ -162,7 +162,7 @@ const Contact = () => {
                     <Instagram className="w-6 h-6 text-accent" />
                   </a>
                   <a
-                    href="https://wa.me/989123456789"
+                    href="https://wa.me/989360701498"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="bg-accent/10 p-4 rounded-full hover:bg-accent/20 transition-colors"
@@ -173,16 +173,6 @@ const Contact = () => {
                 </div>
               </div>
 
-              <div className="bg-muted/30 rounded-2xl p-8">
-                <h3 className="text-xl font-semibold text-primary mb-4">
-                  ساعات کاری
-                </h3>
-                <div className="space-y-2 text-muted-foreground">
-                  <p>شنبه تا چهارشنبه: ۹:۰۰ - ۱۸:۰۰</p>
-                  <p>پنج‌شنبه: ۹:۰۰ - ۱۴:۰۰</p>
-                  <p>جمعه: تعطیل</p>
-                </div>
-              </div>
             </div>
           </div>
         </div>
