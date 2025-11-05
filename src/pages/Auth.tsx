@@ -6,11 +6,13 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
+  const [isForgotPassword, setIsForgotPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
@@ -24,7 +26,26 @@ const Auth = () => {
     setLoading(true);
 
     try {
-      if (isLogin) {
+      if (isForgotPassword) {
+        const { error } = await supabase.auth.resetPasswordForEmail(email, {
+          redirectTo: `${window.location.origin}/auth`,
+        });
+
+        if (error) {
+          toast({
+            title: "خطا",
+            description: error.message,
+            variant: "destructive",
+          });
+        } else {
+          toast({
+            title: "موفق",
+            description: "لینک بازیابی رمز عبور به ایمیل شما ارسال شد",
+          });
+          setIsForgotPassword(false);
+          setEmail("");
+        }
+      } else if (isLogin) {
         const { error } = await signIn(email, password);
         if (error) {
           toast({
@@ -74,17 +95,19 @@ const Auth = () => {
         <Card className="w-full max-w-md">
           <CardHeader className="text-center">
             <CardTitle className="text-2xl font-bold text-primary">
-              {isLogin ? "ورود" : "ثبت‌نام"}
+              {isForgotPassword ? "بازیابی رمز عبور" : isLogin ? "ورود" : "ثبت‌نام"}
             </CardTitle>
             <CardDescription>
-              {isLogin
+              {isForgotPassword
+                ? "ایمیل خود را برای دریافت لینک بازیابی وارد کنید"
+                : isLogin
                 ? "به حساب کاربری خود وارد شوید"
                 : "حساب کاربری جدید بسازید"}
             </CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
-              {!isLogin && (
+              {!isLogin && !isForgotPassword && (
                 <div className="space-y-2">
                   <Label htmlFor="fullName">نام کامل</Label>
                   <Input
@@ -110,35 +133,77 @@ const Auth = () => {
                 />
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="password">رمز عبور</Label>
-                <Input
-                  id="password"
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                  placeholder="حداقل ۶ کاراکتر"
-                  minLength={6}
-                />
-              </div>
+              {!isForgotPassword && (
+                <div className="space-y-2">
+                  <Label htmlFor="password">رمز عبور</Label>
+                  <Input
+                    id="password"
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                    placeholder="حداقل ۶ کاراکتر"
+                    minLength={6}
+                  />
+                </div>
+              )}
 
               <Button type="submit" className="w-full" disabled={loading}>
-                {loading ? "در حال پردازش..." : isLogin ? "ورود" : "ثبت‌نام"}
+                {loading 
+                  ? "در حال پردازش..." 
+                  : isForgotPassword 
+                  ? "ارسال لینک بازیابی"
+                  : isLogin 
+                  ? "ورود" 
+                  : "ثبت‌نام"}
               </Button>
 
-              <div className="text-center text-sm text-muted-foreground">
-                {isLogin ? "حساب کاربری ندارید؟" : "قبلاً ثبت‌نام کرده‌اید؟"}
-                {" "}
-                <Button
-                  type="button"
-                  variant="link"
-                  className="p-0"
-                  onClick={() => setIsLogin(!isLogin)}
-                >
-                  {isLogin ? "ثبت‌نام کنید" : "وارد شوید"}
-                </Button>
-              </div>
+              {!isForgotPassword ? (
+                <div className="space-y-2">
+                  <div className="text-center text-sm text-muted-foreground">
+                    {isLogin ? "حساب کاربری ندارید؟" : "قبلاً ثبت‌نام کرده‌اید؟"}
+                    {" "}
+                    <Button
+                      type="button"
+                      variant="link"
+                      className="p-0"
+                      onClick={() => setIsLogin(!isLogin)}
+                    >
+                      {isLogin ? "ثبت‌نام کنید" : "وارد شوید"}
+                    </Button>
+                  </div>
+                  
+                  {isLogin && (
+                    <div className="text-center">
+                      <Button
+                        type="button"
+                        variant="link"
+                        className="text-sm p-0"
+                        onClick={() => {
+                          setIsForgotPassword(true);
+                          setPassword("");
+                        }}
+                      >
+                        فراموشی رمز عبور
+                      </Button>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <div className="text-center">
+                  <Button
+                    type="button"
+                    variant="link"
+                    className="text-sm p-0"
+                    onClick={() => {
+                      setIsForgotPassword(false);
+                      setEmail("");
+                    }}
+                  >
+                    بازگشت به ورود
+                  </Button>
+                </div>
+              )}
             </form>
           </CardContent>
         </Card>
