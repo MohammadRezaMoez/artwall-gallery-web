@@ -232,6 +232,7 @@ const ProductDetails = () => {
               disabled={!user || submitting}
               rows={4}
               className="resize-none"
+              dir="rtl"
             />
             <Button type="submit" disabled={!user || submitting || !comment.trim()}>
               {submitting ? "در حال ثبت..." : "ثبت نظر"}

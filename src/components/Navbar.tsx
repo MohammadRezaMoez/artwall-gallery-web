@@ -23,7 +23,7 @@ const Navbar = () => {
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
           <Link to="/" className="flex items-center">
-            <img src={new URL('../assets/logo.png', import.meta.url).href} alt="ARTWALL" className="h-12 sm:h-14" />
+            <img src={new URL('../assets/logo.png', import.meta.url).href} alt="ARTWALL" className="h-16 sm:h-20" />
           </Link>
 
           {/* Desktop Navigation */}
